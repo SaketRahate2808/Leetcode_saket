@@ -1,0 +1,80 @@
+Problem no 54. Spiral Matrix
+Description: Given an m x n matrix, return all elements of the matrix in spiral order.
+
+
+
+
+Printing a spiral matrix is analogous to layer-by-layer onion peeling. because we begin printing the pieces from the outside layers and work our way inward.
+To print all four sides of the matrix, we shall use four loops in this method.
+
+1) The items will be printed from left to right in the first loop.
+2) The items will print from top to bottom in the second loop.
+3) The items will be printed from right to left in the third loop.
+4) The items will print from bottom to top in the fourth loop.
+
+Actions:
+
+Establish and set up variables Left represents the starting column index, right represents the ending column index, and top represents the starting row index.
+
+1) Print the elements of a square in a clockwise way for each outer loop traverse.
+2) Print the top row by increasing the count of the top row so that it advances to the next row and printing the top row's items from column index left to right.
+3) Print the right column by decreasing the count of the right and printing the rightmost column from top to bottom of the row index.
+4) Print the bottom row; that is, if top <= bottom, print the bottom row's items from column right to left and reduce the number of bottom rows.
+5) Print the left column; that is, print the elements from the bottom row to the top row and increment the count of left if left <= right.
+Continue running a loop until every loop square is written.
+
+Note: The code snippet below shows how the last two "for" loops add two edge conditions: when we move from bottom to top and from right to left. 
+To determine if the matrix consists of a single row or column, these constraints are applied. The condition is therefore tested in the right-to-left loop since once the elements 
+in a single row are traversed, they cannot be traversed again in a backward manner. Since elements cannot be visited again from bottom to top, the condition is tested in the bottom-to-top loop 
+when there is just one column.
+
+CODE//
+
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<Integer> spiralOrder(int[][] mat) {
+        // Define ans list to store the result.
+        List<Integer> ans = new ArrayList<>();
+        
+        int n = mat.length; // no. of rows
+        int m = mat[0].length; // no. of columns
+        
+        // Initialize the pointers required for traversal.
+        int top = 0, left = 0, bottom = n - 1, right = m - 1;
+
+        // Loop until all elements are not traversed.
+        while (top <= bottom && left <= right) {
+
+            // For moving left to right
+            for (int i = left; i <= right; i++)
+                ans.add(mat[top][i]);
+
+            top++;
+
+            // For moving top to bottom.
+            for (int i = top; i <= bottom; i++)
+                ans.add(mat[i][right]);
+
+            right--;
+
+            // For moving right to left.
+            if (top <= bottom) {
+                for (int i = right; i >= left; i--)
+                    ans.add(mat[bottom][i]);
+
+                bottom--;
+            }
+
+            // For moving bottom to top.
+            if (left <= right) {
+                for (int i = bottom; i >= top; i--)
+                    ans.add(mat[i][left]);
+
+                left++;
+            }
+        }
+        return ans;
+    }
+}
