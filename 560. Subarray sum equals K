@@ -1,0 +1,49 @@
+Problem no.560 Subarray sum equals k
+Description: Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+A subarray is a contiguous non-empty sequence of elements within an array.
+Our method here uses a trick called the prefix sum to solve the problem. This just means adding up all the numbers in a part of the list up to a certain point.
+
+Here's what we see:
+Let's say, up to a certain point in our list, we've added up the numbers and got a total of x. Now, we want to find a smaller part of this list that adds up to a number k.
+If we find such a part, then the sum of the numbers in the leftover part of our list must be x-k. 
+So, if we have a total sum of x up to a certain point, and we remove a part of it that sums up to x-k, what's left will sum up to our target, k. That's what we're looking for.
+
+There might be several parts of our list that add up to x-k. So, the number of ways we can find a sum of k from our list up to that point is exactly how many times we find parts
+that add up to x-k, and we can take away.
+We use simple steps and keep an eye on adding and subtracting numbers in parts of our list to solve this.
+Instead of looking for subarrays with sum k, we will remember all the prefix sums of the subarrays in a map data structure.
+The map would keep every calculated prefix sum by associating it with its frequency in <key, value> pair. Thus, at i, we can only find out from our map structure how many instances
+of x-k have happened before. Then we add this to our answer.
+We will follow this pattern for any index that the given array allows. The possible values for index i can vary from 0 till n-1(where n = size of array).
+
+Approach:
+
+The steps are as follows:
+
+1. We will declare a map to store the prefix sums and their counts.
+2. We will set the value of 0 as 1 on the map.
+3. Then we will run a loop(say i) from index 0 to n-1(n = size of the array).
+4. For each index i, we will do the following:
+5. We will add the current element i.e. arr[i] to the prefix sum.
+6. We will calculate the prefix sum i.e. x-k, for which we need the occurrence.
+7. We will add the occurrence of the prefix sum x-k i.e. mpp[x-k] to our answer.
+8. Then we will store the current prefix sum in the map increasing its occurrence by 1.
+
+//CODE:
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+
+        int n = nums.length;
+        Map<Integer, Integer> mpp = new HashMap<>();
+        int presum = 0, count = 0;
+        mpp.put(0, 1);
+        for (int i = 0; i < n; i++) {
+            presum += nums[i];
+            int remove = presum - k;
+            count += mpp.getOrDefault(remove, 0);
+            mpp.put(presum, mpp.getOrDefault(presum, 0) + 1);
+        }
+        return count;
+    }
+}
